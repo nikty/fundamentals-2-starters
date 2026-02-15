@@ -81,3 +81,61 @@ hierarchy and the classes themselves. The example in this section also
 showed how helpful the template-directed design is. Once you
 understand the template, the rest of the design task is often
 straightforward.
+
+### Designing Classes for Circular Objects, Constructors (HTDC Section 23.1)
+
+The examples in this section suggest that designing classes whose
+instances refer to each other in a circular manner follows mostly the
+same process as the design of classes in general:
+
+1. Read the problem statement and determine how many classes of in-
+   formation there are and how they are related. Make up examples of
+   information and how people will use it. This should help you
+   determine whether there is a need to access a piece of information
+   I from some piece of information J and vice versa.
+2. Develop the interface and class diagram.
+
+   Doing so gives you a second chance to discover the existence of
+   object cycles. Specifically, inspect the class diagram for cycles
+   of containment arrows. Sometimes the cycle is direct and
+   uninterrupted, as in figure 115. In this case, you are almost
+   guaranteed to have pieces of data that are in a circular
+   relationship. What you need to confirm is an intention that each
+   instance points to some other object that points back. Other times,
+   such as in figure 119, there is no direct cycle; instead you must
+   traverse an inheritance arrow in the reverse direction to construct
+   a cycle. In those cases, you may or may not have to construct
+   circular collections of objects. Only examples from the first step
+   can help here.
+3. Translate the class diagram into class definitions naively. Don’t
+   forget to add a purpose statement to each class as usual.
+4. Now modify your class definitions so that they can accommodate
+   circular relationships among objects, if needed.
+   
+   First, try to translate the examples of circular information into
+   data.  If you can translate all the information examples into data
+   (using the regular constructors), you don’t need circularity. If
+   there are some that you can’t translate, you have confirmed the
+   need for circularity.
+   
+   Second, determine the class C whose objects should come into
+   existence first. In our running example at the beginning of the
+   section, this class was Author. Then determine the field that would
+   create a circular relationship; call it cf and let its type be CT.
+   
+   Third, initialize the cf field with an object of type CT that
+   contains no fields of the type C (or its interface). In our running
+   example, we used the empty list of books for this
+   purpose. Sometimes we need to use the value of last resort: null.
+   
+   Fourth, define an add method that assigns new values to cf . For
+   now, use the examples from this section as templates; they either
+   replace the value of cf with a given value or create a list of
+   values. You will soon learn how to design such methods in general.
+   
+   Last, modify the constructors of the classes that implement
+   CT. They must call the add method with this so that the circular
+   references can be established.
+5. Lastly, translate the circular examples of information into data,
+   using just the constructors in the enforced order. Check whether
+   the circular references exist by looking at it.
